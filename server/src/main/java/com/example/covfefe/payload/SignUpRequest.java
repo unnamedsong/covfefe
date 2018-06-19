@@ -1,6 +1,5 @@
 package com.example.covfefe.payload;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
