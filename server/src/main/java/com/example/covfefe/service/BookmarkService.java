@@ -11,9 +11,7 @@ import com.example.covfefe.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -35,15 +33,13 @@ public class BookmarkService {
         return bookRepository.save(book);
     }
 
-    public PagedResponse<BookmarkResponse> getBookmarksCreatedBy(String username, int page, int size) {
+    public PagedResponse<BookmarkResponse> getBookmarksCreatedBy(String username, Pageable pageable) {
 
-        validatePageNumberAndSize(page, size);
+        validatePageNumberAndSize(pageable.getPageNumber(), pageable.getPageSize());
 
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        // Retrieve all bookmarks created by the given username
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Book> bookmarks = bookRepository.findByCreatedBy(user.getId(), pageable);
 
         if (bookmarks.getNumberOfElements() == 0) {
@@ -56,6 +52,10 @@ public class BookmarkService {
 
         return new PagedResponse<>(bookmarkResponses, bookmarks.getNumber(), bookmarks.getSize(), bookmarks.getTotalElements(), bookmarks.getTotalPages(), bookmarks.isLast());
 
+    }
+
+    public void deleteBookmark(String username, long id) {
+        bookRepository.deleteById(id);
     }
 
     private static BookmarkResponse mapBookmarkToBookmarkResponse(Book book, User creator) {

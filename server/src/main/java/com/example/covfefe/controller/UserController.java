@@ -7,8 +7,9 @@ import com.example.covfefe.repository.UserRepository;
 import com.example.covfefe.security.CurrentUser;
 import com.example.covfefe.security.UserPrincipal;
 import com.example.covfefe.service.BookmarkService;
-import com.example.covfefe.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,15 +56,27 @@ public class UserController {
      * username 으로 북마크 조회
      *
      * @param username
-     * @param page
-     * @param size
+     * @param pageable
      * @return
      */
     @GetMapping("/users/{username}/bookmarks")
     public PagedResponse<BookmarkResponse> getBookmarksCreatedBy(@PathVariable(value = "username") String username,
-                                                             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return bookmarkService.getBookmarksCreatedBy(username, page, size);
+                                                                 Pageable pageable) {
+        return bookmarkService.getBookmarksCreatedBy(username, pageable);
+    }
+
+
+    /**
+     * 북마크 삭제
+     *
+     * @param username
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/users/{username}/bookmarks/{id}")
+    public ResponseEntity foo(@PathVariable(value = "username") String username, @PathVariable(value = "id") long id) {
+        bookmarkService.deleteBookmark(username, id);
+        return ResponseEntity.ok(new ApiResponse(true, "Bookmark Deleted Successfully"));
     }
 
 }
