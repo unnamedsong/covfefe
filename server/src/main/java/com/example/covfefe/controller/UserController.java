@@ -2,12 +2,12 @@ package com.example.covfefe.controller;
 
 import com.example.covfefe.exception.ResourceNotFoundException;
 import com.example.covfefe.model.User;
-import com.example.covfefe.payload.UserIdentityAvailability;
-import com.example.covfefe.payload.UserProfile;
-import com.example.covfefe.payload.UserSummary;
+import com.example.covfefe.payload.*;
 import com.example.covfefe.repository.UserRepository;
 import com.example.covfefe.security.CurrentUser;
 import com.example.covfefe.security.UserPrincipal;
+import com.example.covfefe.service.BookmarkService;
+import com.example.covfefe.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +18,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BookmarkService bookmarkService;
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
@@ -46,6 +49,21 @@ public class UserController {
         UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
 
         return userProfile;
+    }
+
+    /**
+     * username 으로 북마크 조회
+     *
+     * @param username
+     * @param page
+     * @param size
+     * @return
+     */
+    @GetMapping("/users/{username}/bookmarks")
+    public PagedResponse<BookmarkResponse> getBookmarksCreatedBy(@PathVariable(value = "username") String username,
+                                                             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return bookmarkService.getBookmarksCreatedBy(username, page, size);
     }
 
 }

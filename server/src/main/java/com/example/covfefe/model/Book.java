@@ -1,5 +1,6 @@
 package com.example.covfefe.model;
 
+import com.example.covfefe.model.audit.UserDateAudit;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "books")
-public class Book {
+public class Book extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

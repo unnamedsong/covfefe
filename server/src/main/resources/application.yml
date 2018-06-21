@@ -6,10 +6,13 @@ spring:
     name: covfefe
   jpa:
     hibernate:
-#      ddl-auto: update
-      ddl-auto: create-drop
+      ddl-auto: update
+#      ddl-auto: create-drop
   datasource:
     data: classpath:data-h2.sql
+    url: jdbc:mysql://localhost:3306/covfefe?useSSL=false&serverTimezone=UTC
+    username: root
+    password: letmein
   jackson:
     time-zone: UTC
     serialization:
@@ -32,6 +35,12 @@ spring:
   profiles: default, dev
   jpa:
     show-sql: true
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+
+
 
 logging:
   level:
