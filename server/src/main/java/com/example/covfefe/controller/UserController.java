@@ -65,7 +65,6 @@ public class UserController {
         return bookmarkService.getBookmarksCreatedBy(username, pageable);
     }
 
-
     /**
      * 북마크 삭제
      *
