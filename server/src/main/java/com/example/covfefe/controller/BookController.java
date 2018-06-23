@@ -2,6 +2,7 @@ package com.example.covfefe.controller;
 
 import com.example.covfefe.payload.BookDto;
 import com.example.covfefe.service.BookService;
+import com.example.covfefe.service.SearchHistoryService;
 import com.example.covfefe.util.AppConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,18 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    private SearchHistoryService searchHistoryService;
+
     @GetMapping
     public ResponseEntity<BookDto> retrieveBooks(
+        @RequestParam(value = "username") String username,
         @RequestParam(value = "target", defaultValue = "all", required = false) String target,
         @RequestParam(value = "query") String query,
         @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+
+        searchHistoryService.save(username, query);
 
         BookDto bookDto = bookService.getBooks(target, query, page, size);
         // TODO: handle exception

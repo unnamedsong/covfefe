@@ -1,17 +1,21 @@
 package com.example.covfefe.controller;
 
 import com.example.covfefe.exception.ResourceNotFoundException;
+import com.example.covfefe.model.SearchHistory;
 import com.example.covfefe.model.User;
 import com.example.covfefe.payload.*;
 import com.example.covfefe.repository.UserRepository;
 import com.example.covfefe.security.CurrentUser;
 import com.example.covfefe.security.UserPrincipal;
 import com.example.covfefe.service.BookmarkService;
+import com.example.covfefe.service.SearchHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -22,6 +26,9 @@ public class UserController {
 
     @Autowired
     private BookmarkService bookmarkService;
+
+    @Autowired
+    private SearchHistoryService searchHistoryService;
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
@@ -60,8 +67,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/users/{username}/bookmarks")
-    public PagedResponse<BookmarkResponse> getBookmarksCreatedBy(@PathVariable(value = "username") String username,
-                                                                 Pageable pageable) {
+    public PagedResponse<BookmarkResponse> getBookmarksCreatedBy(@PathVariable(value = "username") String username, Pageable pageable) {
         return bookmarkService.getBookmarksCreatedBy(username, pageable);
     }
 
@@ -73,9 +79,15 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/users/{username}/bookmarks/{id}")
-    public ResponseEntity foo(@PathVariable(value = "username") String username, @PathVariable(value = "id") long id) {
+    public ResponseEntity deleteBookmark(@PathVariable(value = "username") String username,
+                                         @PathVariable(value = "id") long id) {
         bookmarkService.deleteBookmark(username, id);
         return ResponseEntity.ok(new ApiResponse(true, "Bookmark Deleted Successfully"));
+    }
+
+    @GetMapping("users/{username}/history")
+    public List<SearchHistory> getHistoryCreatedBy(@PathVariable(value = "username") String username) {
+        return searchHistoryService.getHistoryCreatedBy(username);
     }
 
 }

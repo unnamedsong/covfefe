@@ -1,8 +1,9 @@
 package com.example.covfefe.model;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.example.covfefe.util.InstantDeserializer;
+import com.example.covfefe.util.InstantSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,25 +14,9 @@ import java.time.Instant;
 public class SearchHistory {
 
     private String keyword;
+
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = InstantDeserializer.class)
     private Instant createdAt;
-
-    @JsonIgnore
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @JsonGetter
-    private long getEpochTime() {
-        return this.createdAt.toEpochMilli();
-    }
-
-    @JsonSetter
-    private void setEpochTime(long time) {
-        this.createdAt = Instant.ofEpochMilli(time);
-    }
 
 }
