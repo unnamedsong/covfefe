@@ -28,14 +28,15 @@
     ```
 
 ### Front end app (client)
+
 `client` 폴더로 이동 -
 
 ```bash
-    cd client
+cd client
 ```
 
 ```bash
-    npm install && npm start
+npm install && npm start
 ```
 
 `3000` 포트에서 front-end server 동작 확인
