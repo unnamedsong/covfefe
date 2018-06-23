@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.List;
 
 import static com.example.covfefe.util.AppConstants.MAX_HISTORY_SIZE;
+import static com.example.covfefe.util.AppConstants.SEARCH_HISTORY_REDIS_KEY_PREFIX;
 
 @Service
 @Slf4j
@@ -19,7 +20,6 @@ public class SearchHistoryService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    private static final String SEARCH_HISTORY_REDIS_KEY_PREFIX = "user:";
 
     public void save(String username, String query) {
         String key = SEARCH_HISTORY_REDIS_KEY_PREFIX + username;
