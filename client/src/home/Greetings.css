@@ -1,3 +1,21 @@
 .greetings-container {
     margin: 20px auto 0;
 }
+
+.jumbotron {
+    padding-left: 60px;
+    padding-right: 60px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background-color: #eee;
+}
+
+.jumbotron h1 {
+    font-size: 63px;
+}
+
+.jumbotron p {
+    font-size: 1.25rem;
+    font-weight: 300;
+}

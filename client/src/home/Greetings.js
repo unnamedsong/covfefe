@@ -8,10 +8,17 @@ class Greetings extends Component {
   }
 
   render() {
+
+    const jumbotron = (
+      <div className="jumbotron">
+        <h1>Covfefe Application</h1>
+        <p>카카오 책검색 오픈 API를 이용하여 책의 정보를 얻을 수 있는 책 검색 웹 서비스</p>
+      </div>
+    );
     return (
-        <div className="greetings-container">
-          <h1>TODO: greetings</h1>
-        </div>
+      <div className="greetings-container">
+        {jumbotron}
+      </div>
     );
   }
 }

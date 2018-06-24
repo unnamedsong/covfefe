@@ -4,6 +4,7 @@ import './Search.css';
 import {Button, Divider, Form, Icon, Input, List, message, Select} from 'antd';
 import {withRouter} from 'react-router-dom';
 import {notification} from "antd/lib/index";
+import {validateThumbnailUrl, printIsbn} from '../util/Helpers';
 import LoadingIndicator from '../common/LoadingIndicator';
 
 const FormItem = Form.Item;
@@ -55,21 +56,13 @@ class Search extends React.Component {
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
-
-        console.log('Received values of form: ', values);
-
         this.setState({
           isLoading: true
         });
-
-
         const username = this.props.currentUser.username;
 
         searchBooks(username, values.target, values.query)
           .then(response => {
-
-            console.log('response: ', response);
-
             this.setState({
               books: response.books,
               pageable_count: response.pageable_count,
@@ -77,10 +70,9 @@ class Search extends React.Component {
               _end: response._end,
               isLoading: false
             });
-
           }).catch(error => {
           this.setState({
-            isLoading: true
+            isLoading: false
           });
           if (error.status === 401) {
             this.props.handleLogout('/login', 'error', 'You have been logged out. Please Login to continue!');
@@ -104,17 +96,16 @@ class Search extends React.Component {
           this.success('Bookmark Created Successfully');
         }
       }).catch(error => {
-      console.error(error);
+      if (error.status === 401) {
+        this.props.handleLogout('/login', 'error', 'You have been logged out. Please Login to continue!');
+      } else {
+        notification.error({
+          message: 'Covfefe',
+          description: error.message || 'Sorry! Something went wrong. Please try again!'
+        });
+      }
     });
 
-  }
-
-  // move to util
-  validateThumbnailUrl(src) {
-    if (!src) {
-      return 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg';
-    }
-    return src;
   }
 
   render() {
@@ -169,8 +160,6 @@ class Search extends React.Component {
         size="large"
         pagination={{
           onChange: (page) => {
-            console.log('TODO: request page and size!!!!');
-            console.log(page);
           },
           pageSize: 5,
         }}
@@ -179,13 +168,13 @@ class Search extends React.Component {
           <List.Item key={item.title}
                      actions={[
                        <Button shape="circle" icon="star-o" onClick={() => this.createBookmark(item)}/>,
-                       <IconText type="barcode" text={item.isbn}/>
+                       <IconText type="barcode" text={printIsbn(item.isbn.trim())}/>
                      ]}
                      extra={<img width={99} alt="logo"
-                                 src={this.validateThumbnailUrl(item.thumbnail)}/>}>
+                                 src={validateThumbnailUrl(item.thumbnail)}/>}>
             <List.Item.Meta
-              title={<a href={item.url}>{item.title}</a>}
-              description={`${item.publisher} | 정가: ${item.price} | 판매가: ${item.sale_price}`}/>
+              title={<a href={item.url} target="_blank">{item.title}</a>}
+              description={`출판사: ${item.publisher} | 정가: ${item.price.toLocaleString()}원 | 판매가: ${item.sale_price.toLocaleString()}원`}/>
             {item.contents}
           </List.Item>)}/>
     );

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {getHistoryCreatedBy} from "../util/APIUtils";
+import {notification} from "antd/lib/index";
 import './SearchHistory.css';
 import {Alert, Table} from 'antd';
 
@@ -20,7 +21,7 @@ class SearchHistory extends Component {
 
     this.state = {
       history: [],
-      loading: false
+      isLoading: false
     };
   }
 
@@ -34,15 +35,23 @@ class SearchHistory extends Component {
 
     getHistoryCreatedBy(username)
       .then(response => {
-        console.log(response);
-
         this.setState({
-          history: response
+          history: response,
+          isLoading: false
         });
-
       })
       .catch(error => {
-
+        this.setState({
+          isLoading: false
+        });
+        if (error.status === 401) {
+          this.props.handleLogout('/login', 'error', 'You have been logged out. Please Login to continue!');
+        } else {
+          notification.error({
+            message: 'Covfefe',
+            description: error.message || 'Sorry! Something went wrong. Please try again!'
+          });
+        }
       });
   }
 
@@ -54,7 +63,7 @@ class SearchHistory extends Component {
           columns={columns}
           rowKey={record => record.id}
           dataSource={this.state.history}
-          loading={this.state.loading}
+          loading={this.state.isLoading}
           pagination={false}
         />
       </div>

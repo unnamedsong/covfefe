@@ -71,7 +71,6 @@ export function getUserProfile(username) {
   });
 }
 
-// TODO
 export function searchBooks(username, target, query) {
   return request({
     url: API_BASE_URL + "/books?username=" + username + "&target=" + target + "&query=" + query,
