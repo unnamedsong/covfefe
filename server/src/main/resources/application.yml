@@ -35,18 +35,10 @@ spring:
   profiles: default, dev
   jpa:
     show-sql: true
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-
-
 
 logging:
   level:
     root: WARN
-    org.springframework.web: DEBUG
-    org.hibernate: DEBUG
 
 ---
 
@@ -55,3 +47,7 @@ logging:
 # ----------------------------------------
 spring:
   profiles: prod
+
+logging:
+  level:
+    root: INFO
