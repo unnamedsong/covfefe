@@ -13,8 +13,6 @@ public class Book extends UserDateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // TODO camel
     private String title;
     private String contents;
     private String url;

@@ -34,7 +34,6 @@ public class BookController {
         searchHistoryService.save(username, query);
 
         BookDto bookDto = bookService.getBooks(target, query, page, size);
-        // TODO: handle exception
 
         return ResponseEntity.ok(bookDto);
     }

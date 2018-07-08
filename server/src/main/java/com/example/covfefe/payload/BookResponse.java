@@ -22,7 +22,6 @@ public class BookResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public class Meta {
-        // TODO camel
         private int total_count;
         private int pageable_count;
         private boolean is_end;

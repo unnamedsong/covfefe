@@ -30,11 +30,8 @@ public class BookmarkController {
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createBookmark(@Valid @RequestBody Book book) {
-
         bookmarkService.createBookmark(book);
-        // TODO: handle exception
         return ResponseEntity.ok(new ApiResponse(true, "Bookmark Created Successfully"));
-
     }
 
 }
